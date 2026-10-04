@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Play, MapPin, Clock, ChevronRight, Video, ArrowRight } from 'lucide-react';
+import { Play, MapPin, Clock, ChevronRight, Video, ArrowRight, ShieldCheck, Sparkles } from 'lucide-react';
 import { api } from '../services/api.js';
 
 function formatStoryDate(dateInput) {
@@ -20,8 +20,62 @@ function getYouTubeEmbedUrl(url) {
   return null;
 }
 
+// Filter out lifestyle, cooking, village vlogs, entertainment, and non-weather content from featured selection
+function isUnrelatedContent(story) {
+  if (!story) return true;
+  const text = `${story.title || ''} ${story.description || ''}`.toLowerCase();
+  const bannedKeywords = [
+    'cooking', 'kitchen', 'recipe', 'food', 'village life', 'lifestyle',
+    'entertainment', 'dance', 'gaming', 'movie', 'vlog', 'vlogger', 'craft',
+    'fashion', 'mars', 'moon', 'astronomy', 'animal', 'pet', 'cat', 'dog', 'bakery'
+  ];
+  return bannedKeywords.some(keyword => text.includes(keyword));
+}
+
+// Compute deterministic score to pick the highest relevance weather story for Featured position
+function getFeaturedPriorityScore(story) {
+  if (!story) return -9999;
+  if (isUnrelatedContent(story)) return -5000;
+  if (story.is_demo) return -1000;
+
+  let score = 0;
+  const sev = (story.severity || '').toLowerCase();
+  const source = (story.source || '').toLowerCase();
+  const cat = (story.category || '').toLowerCase();
+  const ver = (story.verification_status || '').toLowerCase();
+  const title = (story.title || '').toLowerCase();
+  const desc = (story.description || '').toLowerCase();
+
+  // 1. Severe weather priority
+  if (sev === 'critical' || sev === 'high') score += 50;
+
+  // 2. Verified AI / JEV intelligence
+  if (ver === 'verified' || ver === 'ai_verified' || story.confidence_score >= 0.85) score += 40;
+
+  // 3. Official IMD bulletin
+  if (source.includes('imd') || cat.includes('imd')) score += 35;
+
+  // 4. Core weather event types
+  const weatherTerms = ['rain', 'flood', 'monsoon', 'storm', 'cyclone', 'heatwave', 'thunderstorm', 'fog', 'cloudburst', 'weather'];
+  if (weatherTerms.some(term => title.includes(term) || desc.includes(term))) score += 30;
+
+  // 5. Valid high-res image
+  if (story.image_url && String(story.image_url).startsWith('http')) score += 20;
+
+  // 6. Valid weather video
+  if (story.is_video) score += 15;
+
+  // Recency factor
+  if (story.published_at || story.reported_at) {
+    const time = new Date(story.published_at || story.reported_at).getTime();
+    if (!isNaN(time)) score += Math.min(20, (time / 1000) / (86400 * 30));
+  }
+
+  return score;
+}
+
 function CategoryBadge({ category, isVideo }) {
-  const cat = (category || 'WEATHER NEWS').toUpperCase();
+  const cat = (category || 'WEATHER REPORT').toUpperCase();
 
   if (isVideo || cat === 'VIDEOS' || cat === 'VIDEO') {
     return (
@@ -54,7 +108,7 @@ function ImageContainer({ imageUrl, title, aspectRatio = 'aspect-[16/9]' }) {
         />
       ) : (
         <div className="w-full h-full bg-stone-200 dark:bg-stone-800 flex items-center justify-center">
-          <span className="text-xs font-bold text-stone-400">ATMOS WEATHER</span>
+          <span className="text-xs font-bold text-stone-400 uppercase tracking-widest">WEATHER INTEL</span>
         </div>
       )}
     </div>
@@ -109,7 +163,7 @@ function MainStoryCard({ story, onClick }) {
 
       <div className="px-5 pb-4 pt-3 border-t border-[#E5E2DA]/60 dark:border-[#262938] flex items-center justify-between text-xs text-[#66635C] dark:text-[#9CA3AF]">
         <span className="font-semibold">{formatStoryDate(story.published_at || story.reported_at)}</span>
-        <span className="font-bold text-[#111111] dark:text-stone-300">Source: {story.source || 'YouTube'}</span>
+        <span className="font-bold text-[#111111] dark:text-stone-300">Source: {story.source || 'Weather Intel'}</span>
       </div>
     </motion.div>
   );
@@ -162,13 +216,30 @@ function FeaturedStorySection({ story, onClick }) {
 
   const youtubeEmbedUrl = story.is_video ? getYouTubeEmbedUrl(story.source_url || story.video_url) : null;
 
+  // Determine dynamic badge label based on story type
+  let featureLabel = 'FEATURED WEATHER REPORT';
+  const sourceLower = (story.source || '').toLowerCase();
+  const catLower = (story.category || '').toLowerCase();
+  const verLower = (story.verification_status || '').toLowerCase();
+
+  if (sourceLower.includes('imd') || catLower.includes('imd')) {
+    featureLabel = 'FEATURED IMD UPDATE';
+  } else if (verLower === 'verified' || verLower === 'ai_verified' || story.confidence_score >= 0.85) {
+    featureLabel = 'FEATURED INTELLIGENCE';
+  } else if (story.is_video) {
+    featureLabel = 'FEATURED VIDEO REPORT';
+  }
+
+  const isVerifiedIntel = verLower === 'verified' || verLower === 'ai_verified' || story.confidence_score >= 0.85;
+
   return (
-    <section aria-label="Featured Weather Story" className="mb-4">
+    <section aria-label="Featured Weather Intelligence" className="mb-4">
       <div className="mb-3 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          {story.is_video && <span className="w-2.5 h-2.5 rounded-full bg-red-600 animate-pulse" />}
-          <h2 className="text-xs font-black text-[#A97820] dark:text-[#D9A441] uppercase tracking-widest">
-            {story.is_video ? 'FEATURED VIDEO REPORT' : 'FEATURED WEATHER STORY'}
+          <span className="w-2.5 h-2.5 rounded-full bg-[#D9A441] animate-pulse" />
+          <h2 className="text-xs font-black text-[#A97820] dark:text-[#D9A441] uppercase tracking-widest flex items-center gap-1.5">
+            <Sparkles className="w-3.5 h-3.5 text-[#D9A441]" />
+            {featureLabel}
           </h2>
         </div>
       </div>
@@ -224,7 +295,7 @@ function FeaturedStorySection({ story, onClick }) {
         <div className="lg:col-span-5 p-6 sm:p-8 flex flex-col justify-between space-y-6">
           <div className="space-y-4">
             <div className="flex items-center gap-2 text-xs text-[#A97820] dark:text-[#D9A441] font-extrabold uppercase tracking-wider">
-              <span>{story.category || (story.is_video ? 'VIDEO' : 'RAINFALL')}</span>
+              <span>{story.category || (story.is_video ? 'VIDEO' : 'WEATHER BRIEF')}</span>
               <span>•</span>
               <span className="text-[#66635C] dark:text-[#9CA3AF] truncate max-w-[140px]">
                 {locationText}
@@ -242,6 +313,17 @@ function FeaturedStorySection({ story, onClick }) {
               {story.title}
             </h2>
 
+            {/* Intel Analysis Badge for verified items */}
+            {isVerifiedIntel && (
+              <div className="p-3 rounded-xl bg-[#F7F7F5] dark:bg-[#0F1117] border border-[#E5E2DA] dark:border-[#262938] flex items-start gap-2.5">
+                <ShieldCheck className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" />
+                <p className="text-[11px] font-semibold text-[#66635C] dark:text-stone-300 leading-snug">
+                  <span className="font-bold text-[#111111] dark:text-white">Intel Analysis: </span>
+                  Verified weather observation processed by Weather Intel multi-source streaming pipeline.
+                </p>
+              </div>
+            )}
+
             {story.description && (
               <p className="text-xs sm:text-sm text-[#66635C] dark:text-[#9CA3AF] leading-relaxed line-clamp-4">
                 {story.description}
@@ -251,7 +333,7 @@ function FeaturedStorySection({ story, onClick }) {
 
           <div className="pt-4 border-t border-[#E5E2DA] dark:border-[#262938] flex items-center justify-between">
             <span className="text-xs font-bold text-[#111111] dark:text-stone-300">
-              Source: {story.source || 'YouTube'}
+              Source: {story.source || 'Weather Intel'}
             </span>
 
             <button
@@ -313,30 +395,28 @@ export default function Stories() {
     }
   };
 
-  // Filter valid real video and image stories
-  const realImageStories = stories.filter(s => !s.is_video && !s.is_demo);
-  const realVideoStories = stories.filter(s => s.is_video && !s.is_demo);
+  // Deterministically select Featured Story using priority score
+  const candidateStories = [...stories].sort((a, b) => getFeaturedPriorityScore(b) - getFeaturedPriorityScore(a));
+  const featuredStory = candidateStories.length > 0 ? candidateStories[0] : null;
 
-  // 1. Featured Weather Story: Video-first fallback to image story
-  const featuredStory = realVideoStories.length > 0 
-    ? realVideoStories[0] 
-    : (realImageStories[0] || stories[0] || null);
+  // Remaining stories pool
+  const remainingStories = stories.filter(s => s.id !== featuredStory?.id);
 
-  // 2. Remaining pools after picking featuredStory
-  const imagePool = realImageStories.filter(s => s.id !== featuredStory?.id);
-  const videoPool = realVideoStories.filter(s => s.id !== featuredStory?.id);
+  // Separate remaining real image and real video stories for editorial layout
+  const realImageStories = remainingStories.filter(s => !s.is_video && !s.is_demo);
+  const realVideoStories = remainingStories.filter(s => s.is_video && !s.is_demo);
 
-  // 3. Interleave real image and real video stories into a varied editorial feed
+  // Interleave remaining image & video stories
   const mixedStories = [];
-  const maxLen = Math.max(imagePool.length, videoPool.length);
+  const maxLen = Math.max(realImageStories.length, realVideoStories.length);
   for (let i = 0; i < maxLen; i++) {
-    if (i < imagePool.length) mixedStories.push(imagePool[i]);
-    if (i < videoPool.length) mixedStories.push(videoPool[i]);
+    if (i < realImageStories.length) mixedStories.push(realImageStories[i]);
+    if (i < realVideoStories.length) mixedStories.push(realVideoStories[i]);
   }
 
-  // Fallback if mixedStories empty
+  // Fallback if mixed empty
   if (mixedStories.length === 0) {
-    mixedStories.push(...stories.filter(s => s.id !== featuredStory?.id));
+    mixedStories.push(...remainingStories);
   }
 
   const topStories = mixedStories.slice(0, 3);
@@ -346,22 +426,21 @@ export default function Stories() {
 
   return (
     <div className="min-h-screen bg-[#F7F7F5] dark:bg-[#0F1117] text-[#111111] dark:text-white font-sans pb-24">
-      {/* Container starts directly with Featured Weather Story section (Top Header Banner removed completely) */}
       <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-8 space-y-10">
 
         {loading ? (
           <div className="py-24 text-center space-y-3">
             <div className="w-10 h-10 mx-auto border-3 border-[#D9A441] border-t-transparent rounded-full animate-spin" />
-            <p className="text-xs text-[#66635C] dark:text-[#9CA3AF] font-medium">Loading weather news & stories...</p>
+            <p className="text-xs text-[#66635C] dark:text-[#9CA3AF] font-medium">Loading Weather Intel stories & bulletins...</p>
           </div>
         ) : (
           <>
-            {/* FEATURED WEATHER STORY (VIDEO-FIRST) */}
+            {/* FEATURED WEATHER INTELLIGENCE STORY */}
             {featuredStory && (
               <FeaturedStorySection story={featuredStory} onClick={handleStoryClick} />
             )}
 
-            {/* TOP WEATHER STORIES (INTERLEAVED IMAGE & VIDEO) */}
+            {/* TOP WEATHER STORIES & VIDEO REPORTS */}
             {topStories.length > 0 && (
               <section aria-label="Top Weather Stories">
                 <div className="mb-6 border-b border-[#E5E2DA] dark:border-[#262938] pb-2">
@@ -378,7 +457,7 @@ export default function Stories() {
               </section>
             )}
 
-            {/* MAIN EDITORIAL FEED (LATEST REPORTAGE & REGIONAL DEVELOPMENTS) */}
+            {/* MAIN EDITORIAL FEED */}
             <section aria-label="Latest Weather Stories">
               <div className="mb-6 border-b border-[#E5E2DA] dark:border-[#262938] pb-2 flex items-center justify-between">
                 <h2 className="text-sm font-black text-[#111111] dark:text-white uppercase tracking-wider">
@@ -440,4 +519,3 @@ export default function Stories() {
     </div>
   );
 }
-

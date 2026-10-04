@@ -438,7 +438,7 @@ export default function AdminPanel() {
             )}
           </div>
           <p className="text-[13px] text-[#66635C] dark:text-stone-400 mt-1.5 font-normal max-w-3xl leading-relaxed">
-            PS-26069 ATMOS National Weather Big Data Analytics Platform — Ingestion, Kafka Streaming, Spark AI Engine, JEV Truth Verification & Downstream Sink Monitor.
+            PS-26069 Weather Intel National Weather Big Data Analytics Platform — Ingestion, Kafka Streaming, Spark AI Engine, JEV Truth Verification & Downstream Sink Monitor.
           </p>
         </div>
 

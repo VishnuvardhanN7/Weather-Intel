@@ -28,7 +28,7 @@ export default function Dashboard() {
   }, [fetchData]);
 
   return (
-    <div className="font-sans" role="main" aria-label="ATMOS Home Page">
+    <div className="font-sans" role="main" aria-label="Weather Intel Home Page">
       
       {/* 1. FULL-WIDTH HERO SECTION (WITH PHOTOGRAPHIC BACKGROUND /1.jpg & INTEGRATED NAVBAR OVERLAY) */}
       <WeatherHero />

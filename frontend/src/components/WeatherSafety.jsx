@@ -17,7 +17,7 @@ const SAFETY_TOPICS = [
       'Disconnect ungrounded electrical appliances if water enters home premises.',
       'Boil drinking water during heavy precipitation to prevent waterborne illness.',
       'Move livestock and high-value items to higher elevation before surge.',
-      'Report localized street flooding through the ATMOS Citizen Report tool.',
+      'Report localized street flooding through the Weather Intel Citizen Report tool.',
     ]
   },
   {

@@ -17,8 +17,8 @@ export default function Footer() {
               <div className="w-7 h-7 rounded-lg bg-[#161822] border border-[#262938] flex items-center justify-center text-[#D9A441] shadow-sm">
                 <CloudSun className="w-4 h-4 text-[#D9A441]" />
               </div>
-              <span className="text-lg font-extrabold text-white tracking-tight">
-                ATMOS
+              <span className="text-lg font-extrabold text-white tracking-tight uppercase">
+                WEATHER INTEL
               </span>
             </div>
             
@@ -86,13 +86,13 @@ export default function Footer() {
                   </Link>
                 </li>
                 <li>
-                  <Link to="/ask-atmos" className="hover:text-white transition-colors duration-150 inline-block">
+                  <Link to="/ask-intel" className="hover:text-white transition-colors duration-150 inline-block">
                     AI Intelligence
                   </Link>
                 </li>
                 <li>
-                  <Link to="/ask-atmos" className="hover:text-white transition-colors duration-150 inline-block">
-                    Ask ATMOS
+                  <Link to="/ask-intel" className="hover:text-white transition-colors duration-150 inline-block">
+                    Ask Intel
                   </Link>
                 </li>
               </ul>
@@ -134,7 +134,7 @@ export default function Footer() {
 
         {/* BOTTOM BAR */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[#96938B] font-medium pt-1">
-          <p>© 2026 ATMOS · National Weather Big Data Analytics Platform</p>
+          <p>© 2026 Weather Intel · National Weather Big Data Analytics Platform</p>
           <p className="text-xs font-bold text-stone-300 tracking-wider">LIVE DATA • INDIA</p>
         </div>
       </div>

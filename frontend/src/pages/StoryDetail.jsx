@@ -183,7 +183,7 @@ export default function StoryDetail() {
 
           <div className="flex flex-wrap items-center justify-between gap-4 pt-3 border-t border-[#E5E2DA] dark:border-[#262938] text-xs text-[#66635C] dark:text-[#9CA3AF]">
             <div className="flex flex-wrap items-center gap-4">
-              <span className="font-bold text-[#111111] dark:text-white">{story.source || 'ATMOS News'}</span>
+              <span className="font-bold text-[#111111] dark:text-white">{story.source || 'Weather Intel News'}</span>
               <span>•</span>
               <span className="flex items-center gap-1.5">
                 <MapPin className="w-3.5 h-3.5 text-[#D9A441]" />
@@ -270,7 +270,7 @@ export default function StoryDetail() {
             ) : (
               <div className="text-xs text-[#96938B] font-semibold flex items-center gap-2">
                 <Sparkles className="w-3.5 h-3.5 text-[#D9A441]" />
-                <span>ATMOS Verified Educational & Preparedness Bulletin</span>
+                <span>Weather Intel Educational & Preparedness Bulletin</span>
               </div>
             )}
           </div>
@@ -304,7 +304,7 @@ export default function StoryDetail() {
                     {rel.title}
                   </h4>
                   <div className="text-[10px] text-[#96938B] font-semibold flex items-center justify-between">
-                    <span>{rel.source || 'ATMOS News'}</span>
+                    <span>{rel.source || 'Weather Intel News'}</span>
                     {(rel.is_demo || rel.is_static) && (
                       <span className="text-[9px] font-extrabold text-[#D9A441]">DEMO</span>
                     )}

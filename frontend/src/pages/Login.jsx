@@ -106,7 +106,7 @@ export default function Login() {
           <div className="w-12 h-12 rounded-xl bg-[#111111] text-white flex items-center justify-center mx-auto mb-3 shadow-sm">
             <CloudSun className="w-6 h-6 text-[#D9A441]" />
           </div>
-          <h1 className="text-2xl font-bold text-[#111111] tracking-tight">ATMOS Intel Portal</h1>
+          <h1 className="text-2xl font-bold text-[#111111] tracking-tight">Weather Intel Portal</h1>
           <p className="text-xs text-[#66635C] mt-1 font-medium">
             National Severe Weather Big Data & Analytics Platform
           </p>

@@ -63,7 +63,7 @@ function NewsCard({ article, onClick }) {
   const imageUrl = article.image_url;
   const hasImage = Boolean(imageUrl) && !imgFailed;
 
-  const sourceName = article.source || article.source_name || 'ATMOS News';
+  const sourceName = article.source || article.source_name || 'Weather Intel News';
   const relTime = formatRelativeTime(article.published_at || article.reported_at || article.created_at);
 
   return (
@@ -152,7 +152,7 @@ export default function WeatherNews({ fallbackEvents = [] }) {
             id: e.id || `fb-${idx}`,
             title: e.title,
             description: e.description,
-            source: e.source_name || e.source || 'ATMOS News',
+            source: e.source_name || e.source || 'Weather Intel News',
             source_url: e.source_url,
             image_url: e.image_url || (Array.isArray(e.photos) ? e.photos[0] : null),
             category: e.event_type || 'WEATHER NEWS',

@@ -95,12 +95,12 @@ export default function AskAtmos() {
       };
       setMessages((prev) => [...prev, assistantMessage]);
     } catch (err) {
-      console.error('Ask ATMOS error:', err);
+      console.error('Ask Intel error:', err);
       const errorMessage = {
         id: Date.now() + 1,
         sender: 'assistant',
         isError: true,
-        text: "Unable to reach the ATMOS intelligence service right now. Please check your network connection and try again.",
+        text: "Unable to reach the Weather Intel service right now. Please check your network connection and try again.",
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       };
       setMessages((prev) => [...prev, errorMessage]);
@@ -132,7 +132,7 @@ export default function AskAtmos() {
           </button>
           <div>
             <h1 className="text-2xl sm:text-3xl font-extrabold text-[#111111] tracking-tight flex items-center gap-2">
-              Ask ATMOS
+              Ask Intel
               <Sparkles className="w-5 h-5 text-[#D9A441]" />
             </h1>
             <p className="text-xs sm:text-sm text-[#66635C] mt-0.5 font-normal">
@@ -220,7 +220,7 @@ export default function AskAtmos() {
               }`}
             >
               <div className="flex items-center justify-between gap-4 pb-1 border-b border-[#E5E2DA]/40 text-[10px] font-semibold text-[#96938B]">
-                <span>{msg.sender === 'user' ? 'You' : 'ATMOS Intelligence'}</span>
+                <span>{msg.sender === 'user' ? 'You' : 'Intel'}</span>
                 <span>{msg.timestamp}</span>
               </div>
 

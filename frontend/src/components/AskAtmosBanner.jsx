@@ -26,10 +26,10 @@ export default function AskAtmosBanner() {
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="space-y-1.5 max-w-xl">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#D9A441]/20 text-[#D9A441] text-xs font-bold border border-[#D9A441]/30">
-              <Sparkles className="w-3.5 h-3.5" /> ATMOS AI ASSISTANT
+              <Sparkles className="w-3.5 h-3.5" /> INTEL AI ASSISTANT
             </div>
             <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
-              ASK ATMOS ABOUT {city.toUpperCase()}
+              ASK INTEL ABOUT {city.toUpperCase()}
             </h2>
             <p className="text-xs sm:text-sm text-stone-300 font-medium">
               Have a question about the weather in {city}? Ask our RAG-powered intelligent weather assistant.
@@ -37,10 +37,10 @@ export default function AskAtmosBanner() {
           </div>
 
           <button
-            onClick={() => navigate('/ask-atmos')}
+            onClick={() => navigate('/ask-intel')}
             className="inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-[#D9A441] hover:bg-[#E2B84A] text-[#111111] font-bold text-xs sm:text-sm rounded-full transition-all duration-200 shadow-sm shrink-0 cursor-pointer self-start md:self-auto"
           >
-            <span>Ask ATMOS</span>
+            <span>Ask Intel</span>
             <ArrowRight className="w-4 h-4 text-[#111111]" />
           </button>
         </div>

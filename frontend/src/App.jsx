@@ -90,6 +90,14 @@ function AppRoutes() {
         }
       />
       <Route
+        path="/ask-intel"
+        element={
+          <Layout>
+            <AskAtmos />
+          </Layout>
+        }
+      />
+      <Route
         path="/ask-atmos"
         element={
           <Layout>

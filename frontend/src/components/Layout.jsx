@@ -106,10 +106,10 @@ export default function Layout({ children }) {
                 <CloudSun className="w-4 h-4 text-[#D9A441]" />
               </div>
               <span className={clsx(
-                "text-lg font-extrabold tracking-tight font-sans",
+                "text-lg font-extrabold tracking-tight font-sans uppercase",
                 isHomePage ? "text-white drop-shadow-sm" : "text-[#111111] dark:text-white"
               )}>
-                ATMOS
+                WEATHER INTEL
               </span>
             </Link>
           </div>
@@ -142,20 +142,20 @@ export default function Layout({ children }) {
 
           {/* RIGHT: Action Buttons & Controls */}
           <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-            {/* Ask ATMOS Button */}
+            {/* Ask Intel Button */}
             <button
-              onClick={() => navigate('/ask-atmos')}
+              onClick={() => navigate('/ask-intel')}
               className={clsx(
                 'flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-150 shadow-sm cursor-pointer border border-white/20 shrink-0',
-                location.pathname === '/ask-atmos'
+                (location.pathname === '/ask-intel' || location.pathname === '/ask-atmos')
                   ? 'bg-black text-white ring-2 ring-[#D9A441]'
                   : 'bg-[#111111] hover:bg-black text-white'
               )}
-              title="Ask ATMOS AI Assistant"
-              aria-label="Ask ATMOS AI Assistant"
+              title="Ask Intel AI Assistant"
+              aria-label="Ask Intel AI Assistant"
             >
               <Sparkles className="w-4 h-4 text-[#D9A441] shrink-0" />
-              <span className="hidden sm:inline">Ask ATMOS</span>
+              <span className="hidden sm:inline">Ask Intel</span>
             </button>
 
             {/* Theme Toggle Button */}
