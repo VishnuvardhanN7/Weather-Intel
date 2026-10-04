@@ -349,5 +349,26 @@ def test_confluent_kafka_consumer_helper(mock_consumer_cls):
         mock_consumer.close.assert_called_once()
 
 
+# 18. JEV Processor Kafka Disabled Fallback Test
+def test_jev_processor_kafka_disabled_fallback():
+    from app.services.streaming_pipeline import jev_stream_processor
+    clean_evt = {
+        "event_id": "test_fallback_1",
+        "source": "api",
+        "title": "Severe Rainstorm in Bengaluru",
+        "description": "Heavy rainfall 80mm recorded near MG Road",
+        "severity": "high",
+        "is_fake": False,
+        "fake_score": 0.0,
+    }
+    with patch.object(settings, "KAFKA_ENABLED", False):
+        res = jev_stream_processor.process_clean_event(clean_evt)
+        assert res is not None
+        assert res["event_id"] == "test_fallback_1"
+        assert res["jev_probability"] >= 0.60
+        assert res["alertness_score"] > 0.90
+
+
+
 
 

@@ -69,15 +69,20 @@ class JEVStreamProcessor:
             alertness_score=computed_alertness
         )
 
-        # 6. Publish to weather.verified topic
-        published = kafka_service.publish_verified_event(verified_event)
-        if published:
-            logger.info("[JEV STREAM] Published verified event '%s' to topic 'weather.verified' (JEV: %.3f, alertness: %.3f)",
-                        event_id, jev_probability, computed_alertness)
-            return verified_event
+        # 6. Publish to weather.verified topic if Kafka is enabled
+        if settings.KAFKA_ENABLED:
+            published = kafka_service.publish_verified_event(verified_event)
+            if published:
+                logger.info("[JEV STREAM] Published verified event '%s' to topic 'weather.verified' (JEV: %.3f, alertness: %.3f)",
+                            event_id, jev_probability, computed_alertness)
+            else:
+                logger.warning("[JEV STREAM] Failed to publish verified event '%s' to topic 'weather.verified'", event_id)
+                return None
         else:
-            logger.warning("[JEV STREAM] Failed to publish verified event '%s' to topic 'weather.verified'", event_id)
-            return None
+            logger.info("[JEV STREAM] Kafka disabled. Verified event '%s' accepted for in-process sink (JEV: %.3f, alertness: %.3f)",
+                        event_id, jev_probability, computed_alertness)
+
+        return verified_event
 
     def process_clean_batch(self, max_records: int = 10, timeout_ms: int = 2000) -> List[Dict[str, Any]]:
         clean_events = kafka_service.consume_clean_events(max_records=max_records, timeout_ms=timeout_ms)

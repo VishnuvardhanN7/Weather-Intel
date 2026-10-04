@@ -78,6 +78,6 @@ async def test_no_direct_db_insertion_in_streaming_mode():
             with patch.object(api_collector, "publish_raw_weather_bulk", return_value={"Mumbai": True, "Delhi": True}) as mock_bulk:
                 with patch.object(api_collector, "store_api_events") as mock_store:
                     res = await run_ingestion(mock_db, sources=["public_api"])
-                    assert res["sources"]["public_api"]["published_to_raw"] == 2
+                    assert res["sources"]["openweather"]["published_raw"] == 2
                     mock_bulk.assert_called_once()
                     mock_store.assert_not_called()

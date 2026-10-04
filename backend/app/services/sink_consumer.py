@@ -168,7 +168,9 @@ class SinkConsumer:
             (WeatherEvent.source_id == source_id) | (WeatherEvent.title == clean_text[:500])
         )
         res = await async_session.execute(stmt)
-        existing = res.scalar_one_or_none()
+        existing = res.scalar_one_or_none() if hasattr(res, "scalar_one_or_none") else None
+        if existing and not isinstance(existing, WeatherEvent):
+            existing = None
 
         loc = event.get("location") or {}
         cat = str(event.get("category", "other")).lower()
