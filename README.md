@@ -1,4 +1,7 @@
-# National Weather Big Data Analytics Platform (PS-26069 Next Architecture Version)
+# 🌦️ Weather Intel
+## National Weather Big Data Analytics Platform — PS-26069
+
+> Smart India Hackathon 2026 | Dhruva-8
 
 A National Weather Big Data Analytics Platform for India. It centrally stores weather observations from #IMD/social posts, weather-news sites, public APIs, and citizen reports, then applies automated categorization, fake-report scoring, duplicate detection, human verification, and RAG-based AI search.
 
@@ -37,7 +40,7 @@ Existing Admin Review
               ↓
           Existing PostgreSQL / Neon Storage (Source of Truth)
               ↓
-          Dashboard / Ask ATMOS / RAG Knowledge Base
+          Dashboard / Ask Intel / RAG Knowledge Base
 ```
 
 ---
