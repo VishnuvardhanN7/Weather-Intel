@@ -103,28 +103,31 @@ def format_story_response(event: WeatherEvent) -> Dict[str, Any]:
 def get_source_priority(event: WeatherEvent) -> int:
     """
     Source Priority:
-    1. Real Live Image Stories (not demo, not video, has valid image_url)
-    2. Real Live Video Stories (YouTube, not demo)
+    1. Real Live YouTube Weather Videos (not demo)
+    2. Real Live Image Stories (not demo, has valid image_url)
+    3. Curated Rich Image & Video Stories (has valid image_url or youtube)
     5. Other Live Events without image_url
-    10. Demo / Fallback Stories
+    10. Pure fallback events
     """
     meta = event.metadata_ or {}
     if not isinstance(meta, dict):
         meta = {}
 
-    is_demo = bool(meta.get("is_demo", False)) or bool(meta.get("is_static", False))
-    if is_demo:
-        return 10
-
+    src = str(event.source.value if hasattr(event.source, "value") else event.source or "").lower()
+    src_url = str(event.source_url or "").lower()
+    is_video = src == "youtube" or "youtube.com" in src_url or "youtu.be" in src_url or meta.get("category") == "Videos"
+    
     img_url = meta.get("image_url") or event._primary_image_url()
     has_image = bool(img_url) and str(img_url).startswith("http")
 
-    is_video = event.source == EventSource.YOUTUBE or meta.get("category") == "Videos"
+    is_demo = bool(meta.get("is_demo", False)) or bool(meta.get("is_static", False))
 
-    if is_video:
-        return 2
-    if has_image:
+    if is_video and not is_demo:
         return 1
+    if has_image and not is_demo:
+        return 2
+    if has_image or is_video:
+        return 3
     return 5
 
 
