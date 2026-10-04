@@ -1,0 +1,9 @@
+# Development / test-only dependencies. The runtime application uses
+# requirements.txt; install these alongside it to run the test suite:
+#
+#   pip install -r requirements.txt -r requirements-dev.txt
+#   python -m unittest discover tests
+#
+pytest==7.4.4
+pytest-asyncio==0.23.5
+httpx==0.25.2

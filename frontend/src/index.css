@@ -1,0 +1,155 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* ATMOS Color System - Refined Editorial Gold & Charcoal */
+  --bg-primary: #F7F7F5;
+  --bg-secondary: #FFFFFF;
+  --surface: #FFFFFF;
+  --text-primary: #111111;
+  --text-secondary: #66635C;
+  --text-muted: #96938B;
+  --border: #E5E2DA;
+  --accent-gold: #D9A441;
+  --accent-gold-warm: #E2B84A;
+  --accent-gold-dark: #A97820;
+  --accent-gold-light: #F7EED7;
+  --success: #2E7D5B;
+  --charcoal: #111111;
+}
+
+html.dark {
+  --bg-primary: #0F1117;
+  --bg-secondary: #161822;
+  --surface: #161822;
+  --text-primary: #F3F4F6;
+  --text-secondary: #9CA3AF;
+  --text-muted: #6B7280;
+  --border: #262938;
+  --accent-gold: #D9A441;
+  --accent-gold-warm: #E2B84A;
+  --accent-gold-dark: #A97820;
+  --accent-gold-light: #2A2518;
+  --success: #2E7D5B;
+  --charcoal: #111111;
+}
+
+@layer base {
+  html, body {
+    width: 100%;
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+  }
+  body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    @apply antialiased font-sans selection:bg-[#F7EED7] selection:text-[#111111] transition-colors duration-200;
+  }
+  *:focus-visible {
+    @apply outline-2 outline-offset-2 outline-[#D9A441] rounded-md;
+  }
+}
+
+@layer utilities {
+  .full-bleed-hero {
+    width: 100vw;
+    max-width: none;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+  }
+}
+
+@layer components {
+  .card-editorial {
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    @apply rounded-xl p-6 shadow-subtle transition-all duration-200;
+  }
+
+  .btn-primary, .btn-atmos-primary {
+    background-color: #111111;
+    color: #FFFFFF;
+    @apply px-4 py-2 rounded-lg text-xs font-semibold hover:bg-stone-800 transition-all duration-150 disabled:opacity-50 inline-flex items-center justify-center gap-2;
+  }
+
+  .btn-secondary, .btn-atmos-secondary {
+    background-color: var(--surface);
+    color: var(--text-primary);
+    border: 1px solid var(--border);
+    @apply px-4 py-2 rounded-lg text-xs font-medium hover:bg-stone-50 dark:hover:bg-stone-800 transition-all duration-150 disabled:opacity-50 inline-flex items-center justify-center gap-2;
+  }
+
+  .btn-accent, .btn-atmos-accent {
+    background-color: #D9A441;
+    color: #111111;
+    @apply px-4 py-2 rounded-lg text-xs font-bold hover:bg-[#A97820] hover:text-white transition-all duration-150 disabled:opacity-50 inline-flex items-center justify-center gap-2;
+  }
+
+  .input, .select {
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text-primary);
+    @apply w-full rounded-xl px-3.5 py-2 text-xs font-medium focus:outline-none focus:border-[#D9A441] focus:ring-1 focus:ring-[#D9A441] transition-all;
+  }
+}
+
+@layer utilities {
+  .skip-link {
+    @apply absolute -top-12 left-4 z-[100] bg-stone-900 text-white px-4 py-2 text-xs font-semibold rounded-md shadow-md transition-all;
+  }
+  .skip-link:focus {
+    @apply top-4;
+  }
+}
+
+.leaflet-container {
+  background: var(--bg-primary) !important;
+  font-family: 'Plus Jakarta Sans', 'Inter', sans-serif !important;
+  z-index: 1 !important;
+  isolation: isolate;
+}
+
+html.dark .leaflet-tile-pane {
+  filter: brightness(0.75) contrast(1.05) invert(0.9) hue-rotate(190deg) saturate(0.5);
+}
+
+html:not(.dark) .leaflet-tile-pane {
+  filter: none;
+}
+
+.leaflet-popup-content-wrapper {
+  background-color: var(--surface) !important;
+  color: var(--text-primary) !important;
+  border-radius: 0.75rem !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+  border: 1px solid var(--border) !important;
+}
+
+.leaflet-popup-tip {
+  background-color: var(--surface) !important;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+html.dark ::-webkit-scrollbar-track {
+  background: #0F1117;
+}
+html.dark ::-webkit-scrollbar-thumb {
+  background: #262938;
+  border-radius: 9999px;
+}
+
+html:not(.dark) ::-webkit-scrollbar-track {
+  background: #F7F7F5;
+}
+html:not(.dark) ::-webkit-scrollbar-thumb {
+  background: #E7E7E3;
+  border-radius: 9999px;
+}
+
+

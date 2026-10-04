@@ -1,0 +1,10 @@
+.git
+**/__pycache__
+**/node_modules
+**/.venv
+**/venv
+**/dist
+backend/.env
+backend/uploads
+data/raw
+data/processed
