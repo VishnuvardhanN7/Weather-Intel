@@ -235,7 +235,7 @@ export default function Login() {
 
           <div className="mt-6 pt-4 border-t border-[#E5E2DA] text-center">
             <p className="text-[11px] text-[#96938B] font-medium">
-              Public weather observations are accessible as guest. Sign in to submit and verify incidents.
+              For Admin Login : username/password = admin/admin123
             </p>
           </div>
         </div>
